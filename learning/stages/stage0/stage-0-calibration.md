@@ -54,14 +54,14 @@
 
 **任务**
 
-- [ ] T1.1 先不看视频，凭理解写 `Value` 类：`__add__/__mul__/__pow__/__tanh__/__relu__`、`backward()`（拓扑排序 + 累加）
+- [ ] T1.1 先不看视频，凭理解写 `Value` 类：`__add__/__mul__/__pow__/__tanh__/__relu__`、`backward()`（拓扑排序 + 累加）→ 骨架在 [`mygrad/`](mygrad/)，前向已给，补 6 处 TODO；`pytest -q` 从 4 passed / 14 failed 打到 18 passed
 - [ ] T1.2 用它在二维 toy 数据上训一个 2 层 MLP 做二分类，画出决策边界 → `assets/stage0-micrograd.png`
 - [ ] T1.3 写 `tests/test_gradcheck.py`：同一网络分别用自写 autograd 与 `torch.autograd` 求梯度，断言 `max|diff| < 1e-6`（用 float64）
 - [ ] T1.4 写 300 字笔记：为什么必须拓扑排序、为什么梯度是 `+=` 而不是 `=`、`zero_grad` 漏了会怎样
 
 **验收**：T1.3 通过；能对着代码口述一遍"loss → w2 → h → w1"的梯度回流路径。
 
-**卡点提示**：`-x` 与 `x**-1` 要显式实现，否则 `1/x`、减法的图会断；softmax + 交叉熵建议合并手推，别拆成两步再梯度校验。
+**卡点提示**：坑集中在三处——忘 `+=`（`x*x + x` 立刻挂）、拓扑序反了（深层图用到没算完的 grad）、`pow` 的局部导数漏乘 `out.grad`；详见 [`mygrad/README.md`](mygrad/README.md)。softmax + 交叉熵建议合并手推，别拆成两步再梯度校验。
 
 ## 4. M2 · 语言模型与训练直觉：makemore（3–4 天）
 
