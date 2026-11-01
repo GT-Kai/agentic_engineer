@@ -1,7 +1,7 @@
 # 阶段 0 · 校准：学习内容与任务清单
 
 > 周期：第 1–4 周（2026-W45 ~ 2026-W48）· 全职 35–45h/w ｜ 在职 12–18h/w
-> 上游：[roadmap.md](../roadmap.md) 阶段 0 ｜ 状态：🟨 进行中 ｜ 建立于 2026-11-01
+> 上游：[roadmap.md](../../roadmap.md) 阶段 0 ｜ 状态：🟨 进行中 ｜ 建立于 2026-11-01
 > 目标不是重学 ML 理论，而是**拿到"改代码、debug 训练"的手感**：给你一条不收敛的 loss 曲线，你能在一小时内定位到原因。
 
 ## 0. 出口标准
@@ -10,14 +10,14 @@
 
 | # | 交付物 | 位置 | 判定标准 |
 |---|---|---|---|
-| E1 | 手写 autograd（micrograd 等价物） | `learning/labs/stage0/micrograd/` | 与 `torch.autograd` 梯度校验误差 < 1e-6 |
-| E2 | 手写 GPT + 因果性测试 | `learning/labs/stage0/nanogpt/` | 位置 t 的输出对 t+1 的输入不敏感；参数量 ≈10.65M |
-| E3 | 两次可对比的训练 run | [experiments.md](../experiments.md) EXP-001/002 | 有曲线、有超参、有"和 baseline 比怎么样"的结论 |
-| E4 | 显存估算表 | `learning/labs/stage0/vram.md` | 对手写 GPT 与 7B LoRA 各估一次，实测误差 < 20% |
-| E5 | LoRA SFT 三连 | [experiments.md](../experiments.md) EXP-003~005 | r / target_modules / lr 各一组消融，方向能解释 |
+| E1 | 手写 autograd（micrograd 等价物） | `learning/stages/stage0/micrograd/` | 与 `torch.autograd` 梯度校验误差 < 1e-6 |
+| E2 | 手写 GPT + 因果性测试 | `learning/stages/stage0/nanogpt/` | 位置 t 的输出对 t+1 的输入不敏感；参数量 ≈10.65M |
+| E3 | 两次可对比的训练 run | [experiments.md](../../experiments.md) EXP-001/002 | 有曲线、有超参、有"和 baseline 比怎么样"的结论 |
+| E4 | 显存估算表 | `learning/stages/stage0/vram.md` | 对手写 GPT 与 7B LoRA 各估一次，实测误差 < 20% |
+| E5 | LoRA SFT 三连 | [experiments.md](../../experiments.md) EXP-003~005 | r / target_modules / lr 各一组消融，方向能解释 |
 | E6 | 阶段复盘 | `learning/notes/stage0-retro.md` | 能回答第 7 节全部自测题 |
 
-对应的三条验收项（来自 [roadmap.md:68](../roadmap.md)）：能说出 loss 不降的五种原因并给出排查顺序、能在 24GB 卡上估算 7B LoRA 显存、有一次完整 run 的日志与曲线。三条都要落到 E3/E4/E5 上，不能只写在脑子里。
+对应的三条验收项（来自 [roadmap.md:68](../../roadmap.md)）：能说出 loss 不降的五种原因并给出排查顺序、能在 24GB 卡上估算 7B LoRA 显存、有一次完整 run 的日志与曲线。三条都要落到 E3/E4/E5 上，不能只写在脑子里。
 
 ## 1. 模块总览
 
@@ -30,7 +30,7 @@
 | M4 | 训练工程 | 自建 | 2–3 | 混合精度、累积、调度、断点续训、显存表 |
 | M5 | LoRA SFT | peft / transformers | 3–4 | 三条消融实验 + 显存结论 |
 
-材料链接：[Zero to Hero 主页](https://karpathy.ai/zero-to-hero.html)、[nn-zero-to-hero 代码](https://github.com/karpathy/nn-zero-to-hero)、[nanoGPT](https://github.com/karpathy/nanoGPT)。代码统一放 `learning/labs/stage0/`，一条命令可复现（`make` 或 `run.sh`），环境版本写进 `env.md`。
+材料链接：[Zero to Hero 主页](https://karpathy.ai/zero-to-hero.html)、[nn-zero-to-hero 代码](https://github.com/karpathy/nn-zero-to-hero)、[nanoGPT](https://github.com/karpathy/nanoGPT)。代码统一放 `learning/stages/stage0/`，一条命令可复现（`make` 或 `run.sh`），环境版本写进 `env.md`。
 
 ## 2. M0 · 环境与工具链（0.5 天）
 
@@ -38,11 +38,11 @@
 
 **任务**
 
-- [ ] T0.1 建环境，记录 `python -V`、`torch.__version__`、`torch.version.cuda`、`torch.cuda.get_device_name(0)`、显存大小 → `learning/labs/stage0/env.md`
+- [ ] T0.1 建环境，记录 `python -V`、`torch.__version__`、`torch.version.cuda`、`torch.cuda.get_device_name(0)`、显存大小 → `learning/stages/stage0/env.md`
 - [ ] T0.2 写 3 个 pytest 用例：dataclass 序列化往返、`asyncio.gather` 并发正确性、tensor shape 断言；`pytest -q` 全绿
 - [ ] T0.3 写 20 行 Dockerfile（`nvidia/cuda` 基础镜像 + 装 torch），容器内跑通 T0.1 的检查脚本
 - [ ] T0.4 训练脚本统一用 `logging` + `argparse`，日志同时落文件（后续所有 run 都靠它做对比）
-- [ ] T0.5 建一个 `learning/labs/stage0/Makefile`，目标：`env` / `test` / `train` / `sample`
+- [ ] T0.5 建一个 `learning/stages/stage0/Makefile`，目标：`env` / `test` / `train` / `sample`
 
 **验收**：`make test` 在裸机与容器里都能过；`env.md` 里的显存数字和 `nvidia-smi` 对得上。
 
@@ -177,4 +177,4 @@
 - "loss 不降"排查清单 → 阶段 3/4 的 debug 手册
 - 日志与实验记录规范 → 阶段 4 的多轮 RL 对比必须靠它
 
-完成后：更新 [roadmap.md](../roadmap.md) 阶段 0 的验收勾选与 [README.md](../README.md) 的进度总览，在 [log.md](../log.md) 补一条周记录，并把复盘写进 `learning/notes/stage0-retro.md`。
+完成后：更新 [roadmap.md](../../roadmap.md) 阶段 0 的验收勾选与 [README.md](../../README.md) 的进度总览，在 [log.md](../../log.md) 补一条周记录，并把复盘写进 `learning/notes/stage0-retro.md`。

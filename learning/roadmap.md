@@ -50,7 +50,7 @@
 
 **目标**：具备改代码、debug 训练的手感，而不是重学一遍 ML 理论。
 
-**详细任务**：[stages/stage-0-calibration.md](stages/stage-0-calibration.md) —— 6 个模块（M0–M5）、出口标准 E1–E6、周计划与削减策略
+**详细任务**：[stages/stage-0-calibration.md](stages/stage0/stage-0-calibration.md) —— 6 个模块（M0–M5）、出口标准 E1–E6、周计划与削减策略
 
 **学什么**
 
